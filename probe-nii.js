@@ -3,7 +3,6 @@ var util = require('util');
 var fs = require('fs');
 var dgram = require('dgram');
 var dclient = dgram.createSocket('udp4');
-var crypto = require('crypto');
 var HashMap = require('hashmap').HashMap;
 var map = new HashMap();
 var mapBool = true;
@@ -11,13 +10,6 @@ var isBeaconSending = false;
 var udpPort = 3000;
 var udpServer = 'localhost';
 
-//var Schema = require('protobuf').Schema;
-//var schema = new Schema(fs.readFileSync('conf/wifiUpdtMsg.desc'));
-
-var ap_mac_example = 1234567;
-
-var conf = undefined;
-var route = require('./conf/route2.json');
 var apMeta = require('./conf/apMeta.json');
 
 //LINKTYPE_IEEE802_11_RADIO is defined as LinkType
@@ -41,10 +33,7 @@ pcapSession.on('packet', function(packet){
 		   devi = strs[3]+strs[4]+strs[5];
 	   }
 	   var tmpi = new Buffer(devi);
-	   var digest = crypto.createHash('sha1').update(tmpi).digest('base64');
 	   var now = new Date();
-	   var result = apMeta.id+","+now.toJSON()+","+oui+","+digest+","+packet2.ssiSignal+"," +packet2.ssiNoise+","+packet2.ssiChType1+","+packet2.ssiChType2+","+ieee802frame.subType;
-	   //console.log(result);
 	   console.log(apMeta.id+','+now.toJSON()+','+ieee802frame.shost+','+packet2.ssiSignal+','+packet2.ssiNoise+','+4);	   
    }
    else if(ieee802frame.subType == 8){
@@ -57,9 +46,7 @@ pcapSession.on('packet', function(packet){
 			devi = strs[3]+strs[4]+strs[5];
 		}
 		var tmpi = new Buffer(devi);
-		var digest = crypto.createHash('sha1').update(tmpi).digest('base64');
 		var now = new Date();
-		var result = apMeta.id+","+now.toJSON()+","+oui+","+digest+","+packet2.ssiSignal+","+packet2.ssiNoise+","+packet2.ssiChType1+","+packet2.ssiChType2+","+ieee802frame.subType;
 		console.log(apMeta.id+','+now.toJSON()+','+ieee802frame.shost+','+packet2.ssiSignal+','+packet2.ssiNoise+','+8);
 		map.set(ieee802frame.shost, result);
 		if(now.getSeconds() == 30){
