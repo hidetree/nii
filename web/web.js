@@ -1,0 +1,34 @@
+var http = require('http');
+var fs = require('fs');
+
+var pathHead = '.';
+
+function readPipeRes(filename, response, headers){
+        console.log(filename);
+        console.log(headers);
+        response.writeHead(200, headers);
+        var rsObj = fs.createReadStream(filename);
+        rsObj.on('readable', function(){
+                rsObj.pipe(response);
+        });
+        rsObj.on('error', function(error){
+                console.log("[ERROR] "+error);
+                response.write("File Not Found");
+        });
+}
+
+http.createServer(function(req, res){
+	if(req.url.match('^/visualize.html$')){
+		var headers = {'Content-Type': 'text/html'};
+        	readPipeRes(pathHead+req.url, res, headers);
+	}else if(req.url.match('^/d3.js$')||req.url.match('^d3.min.js$')){
+	                var headers = {'Content-Type': 'text/javascript'};
+	                readPipeRes(pathHead+req.url, res, headers);
+	}else if(req.url.match('^/counter.local.log$')){
+	                var headers = {'Content-Type': 'text/plain'};
+	                readPipeRes(pathHead+req.url, res, headers);
+	}else{
+                res.end('Sorry your access is unacceptable.');
+        }
+				        //re
+}).listen(10000, "localhost");
