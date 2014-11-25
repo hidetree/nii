@@ -17,19 +17,17 @@
 			//2014-11-24T15:13:51.365Z
 			//ISO8601 UTC time format
 			//var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ").parse;
-			//var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
-			var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S").parse;
+			var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
 			var x = d3.time.scale().range([0, width]);
 			var y = d3.scale.linear().range([height, 0]);
 			var xAxis = d3.svg.axis().scale(x).orient("bottom");
 			var yAxis = d3.svg.axis().scale(y).orient("left");
-			var line = d3.svg.line().x(function(d){ return x(d.date);}).y(function(d){return y(d.close);});
+			var line = d3.svg.line().x(function(d){ return x(d.date);}).y(function(d){return y(d.num);});
 			var svg = d3.select("body").append("svg")
 				.attr("width", width+margin.left+margin.right)
 				.attr("height", height+margin.top+margin.bottom)
 			    .append("g")
 				.attr("transform", "translate("+margin.left+','+margin.top+")");
-			//d3.csv("../log/counter.local.log", function(data){
 			d3.csv("./counter.local.log", function(error, data){
 					data.forEach(function(d){
 						d.date = parseDate(d.date);
