@@ -24,7 +24,7 @@ http.createServer(function(req, res){
 	}else if(req.url.match('^/d3.js$')||req.url.match('^d3.min.js$')){
 	                var headers = {'Content-Type': 'text/javascript'};
 	                readPipeRes(pathHead+req.url, res, headers);
-	}else if(req.url.match('^/counter.local.log$')){
+	}else if(req.url.match('^/counter.local.log$')||req.url.match('^/data.tsv$')){
 	                var headers = {'Content-Type': 'text/plain'};
 	                readPipeRes(pathHead+req.url, res, headers);
 	}else{
